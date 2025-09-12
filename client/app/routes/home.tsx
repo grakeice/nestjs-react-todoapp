@@ -1,4 +1,9 @@
-import { Welcome } from "../welcome/welcome";
+import { useLoaderData } from "react-router";
+
+import { TodoApp } from "~/components/TodoApp";
+import type { TodoDataResponse } from "~/components/TodoApp/core/types";
+import { Container } from "@radix-ui/themes";
+
 import type { Route } from "./+types/home";
 
 // biome-ignore lint/correctness/noEmptyPattern: initial
@@ -8,7 +13,21 @@ export function meta({}: Route.MetaArgs) {
 		{ name: "description", content: "Welcome to React Router!" },
 	];
 }
+export async function clientLoader() {
+	const res = await fetch("http://127.0.0.1:3000/items");
+	const data = (await res.json()) as TodoDataResponse;
+	return data;
+}
+
+export function HydrateFallback() {
+	return <div>Loading...</div>;
+}
 
 export default function Home() {
-	return <Welcome />;
+	const data = useLoaderData<typeof clientLoader>();
+	return (
+		<Container>
+			<TodoApp data={data} />
+		</Container>
+	);
 }
