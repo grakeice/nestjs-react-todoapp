@@ -14,10 +14,12 @@ export function meta({}: Route.MetaArgs) {
 	];
 }
 export async function clientLoader() {
-	const res = await fetch("http://127.0.0.1:3000/items");
+	const res = await fetch("http://127.0.0.1:3000/items", { mode: "cors" });
 	const data = (await res.json()) as TodoDataResponse;
 	return data;
 }
+
+clientLoader.hydrate = true as const;
 
 export function HydrateFallback() {
 	return <div>Loading...</div>;

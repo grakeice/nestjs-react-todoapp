@@ -9,7 +9,6 @@ interface TodoListProps {
 }
 
 export function TodoList({ data }: TodoListProps): JSX.Element {
-	console.log(data);
 	return (
 		<Table.Root>
 			<Table.Header>
