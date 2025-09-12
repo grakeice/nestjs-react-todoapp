@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "client"
+		},
+		{
+			"path": "backend"
+		}
+	],
+	"settings": { "prettier.enable": true, "biome.enabled": true }
+}

@@ -1,0 +1,5 @@
+{
+	"backend/**/*.{ts,mjs,js,cjs,json,md}": "pnpm backend exec prettier --write",
+	"backend/**/*.{ts,mjs,js,cjs}": "pnpm backend exec eslint --fix",
+	"client/**/*.{ts,tsx,js,jsx,mjs,cjs,json}": "pnpm client exec biome check --write"
+}

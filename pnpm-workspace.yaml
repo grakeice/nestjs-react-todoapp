@@ -1,0 +1,9 @@
+packages:
+  - backend
+  - client
+
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@tailwindcss/oxide'
+  - esbuild
+  - unrs-resolver

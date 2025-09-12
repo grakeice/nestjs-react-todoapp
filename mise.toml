@@ -1,0 +1,8 @@
+[tools]
+node = "24"
+pnpm = "latest"
+
+[tasks]
+client = { run = "pnpm run client" }
+backend = { run = "pnpm run backend" }
+dev = { run = "pnpm client dev & pnpm backend start:dev" }
