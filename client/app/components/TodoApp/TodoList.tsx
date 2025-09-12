@@ -23,7 +23,15 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 					return (
 						<Table.Row key={item.id}>
 							<Table.Cell>
-								<Checkbox />
+								<Checkbox
+									defaultChecked={
+										item.status === "DONE"
+											? true
+											: item.status === "IN_PROGRESS"
+												? "indeterminate"
+												: false
+									}
+								/>
 							</Table.Cell>
 							<Table.RowHeaderCell>{item.name}</Table.RowHeaderCell>
 							<Table.Cell>{item.description}</Table.Cell>
