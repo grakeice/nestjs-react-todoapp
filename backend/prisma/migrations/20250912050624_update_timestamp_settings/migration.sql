@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "public"."Item" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMP(0),
+ALTER COLUMN "updatedAt" SET DATA TYPE TIMESTAMP(0);

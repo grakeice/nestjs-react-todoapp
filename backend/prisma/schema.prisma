@@ -15,11 +15,12 @@ datasource db {
 }
 
 model Item {
-  id        String     @id @default(uuid()) @db.Uuid
-  name      String
-  status    ItemStatus @default(TODO)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  status      ItemStatus @default(TODO)
+  createdAt   DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime   @updatedAt @db.Timestamp(0)
 }
 
 enum ItemStatus {
