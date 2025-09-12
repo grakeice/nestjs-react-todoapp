@@ -1,3 +1,5 @@
+import type { ItemStatus } from "generated/prisma";
+
 export interface Item {
 	id: string;
 	name: string;
@@ -6,5 +8,3 @@ export interface Item {
 	createdAt: Date;
 	updatedAt: Date;
 }
-
-export type ItemStatus = "TODO" | "IN_PROGRESS" | "DONE";
