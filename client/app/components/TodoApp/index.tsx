@@ -18,16 +18,15 @@ interface TodoAppProps {
 export function TodoApp({ data }: TodoAppProps): JSX.Element {
 	const fetcher = useFetcher<TaskDataResponse>();
 	const [items, setItems] = useState<Task[]>(
-		(() =>
-			data.map(
-				(item) =>
-					new Task({
-						...item,
-						dueDate: item.dueDate ? new Date(item.dueDate) : null,
-						createdAt: new Date(item.createdAt),
-						updatedAt: new Date(item.updatedAt),
-					}),
-			) ?? [])(),
+		data.map(
+			(item) =>
+				new Task({
+					...item,
+					dueDate: item.dueDate ? new Date(item.dueDate) : null,
+					createdAt: new Date(item.createdAt),
+					updatedAt: new Date(item.updatedAt),
+				}),
+		) ?? [],
 	);
 	const [isModalOpened, setModalOpenedStatus] = useState(false);
 
