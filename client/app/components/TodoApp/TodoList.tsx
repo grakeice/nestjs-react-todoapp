@@ -29,7 +29,6 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 		setModalOpenedStatus(true);
 	};
 
-	console.log(data);
 	return (
 		<Table.Root className="min-w-2/3">
 			<Table.Header>
@@ -58,7 +57,9 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 							</Table.Cell>
 							<Table.RowHeaderCell>{item.name}</Table.RowHeaderCell>
 							<Table.Cell>{item.description}</Table.Cell>
-							<Table.Cell>{item.dueDate?.toDateString()}</Table.Cell>
+							<Table.Cell>
+								{item.dueDate?.toLocaleDateString("ja", { dateStyle: "long" })}
+							</Table.Cell>
 							<Table.Cell>
 								<Button
 									type="button"
