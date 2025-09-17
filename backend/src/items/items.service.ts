@@ -15,22 +15,24 @@ export class ItemsService {
 	}
 
 	async create(createItemDto: CreateItemDto) {
-		const { name, description } = createItemDto;
+		const { name, description, dueDate } = createItemDto;
 		return await this.prismaService.item.create({
 			data: {
 				name,
 				description,
+				dueDate,
 				status: "TODO",
 			},
 		});
 	}
 
 	async update(id: string, updateItemDto: UpdateItemDto) {
-		const { name, description, status } = updateItemDto;
+		const { name, description, dueDate, status } = updateItemDto;
 		return await this.prismaService.item.update({
 			data: {
 				name,
 				description,
+				dueDate,
 				status,
 			},
 			where: { id },

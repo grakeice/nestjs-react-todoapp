@@ -1,9 +1,13 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateItemDto {
-	@IsString()
 	@IsNotEmpty()
+	@IsString()
 	name: string;
+
+	@IsOptional()
+	@IsDate()
+	dueDate?: Date;
 
 	@IsOptional()
 	@IsString()

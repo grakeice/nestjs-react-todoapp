@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsDate, IsEnum, IsOptional, IsString } from "class-validator";
 import { ItemStatus } from "generated/prisma";
 
 export class UpdateItemDto {
@@ -9,6 +9,10 @@ export class UpdateItemDto {
 	@IsOptional()
 	@IsString()
 	description?: string;
+
+	@IsOptional()
+	@IsDate()
+	dueDate?: Date;
 
 	@IsEnum(ItemStatus)
 	status?: ItemStatus;
