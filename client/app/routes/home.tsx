@@ -2,7 +2,6 @@ import { useLoaderData } from "react-router";
 
 import { TodoApp } from "~/components/TodoApp";
 import type { TaskDataResponse } from "~/components/TodoApp/core/types";
-import { Container } from "@radix-ui/themes";
 
 import type { Route } from "./+types/home";
 
@@ -27,9 +26,5 @@ export function HydrateFallback() {
 
 export default function Home() {
 	const data = useLoaderData<typeof clientLoader>();
-	return (
-		<Container>
-			<TodoApp data={data} />
-		</Container>
-	);
+	return <TodoApp data={data} />;
 }

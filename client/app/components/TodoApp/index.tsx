@@ -1,18 +1,10 @@
 import { type JSX, useState } from "react";
 
-import { Plus, SidebarIcon } from "lucide-react";
+import { SidebarIcon } from "lucide-react";
+import { Container } from "@radix-ui/themes";
 
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarGroup,
-	SidebarGroupContent,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
-	SidebarProvider,
-	SidebarTrigger,
-} from "../ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
+import { AppSidebar } from "./AppSidebar";
 import { Task } from "./core/Task";
 import type { TaskDataResponse } from "./core/types";
 import { EditTask } from "./Modals/EditTask";
@@ -40,10 +32,6 @@ export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
 		setModalOpenedStatus((prev) => !prev);
 	};
 
-	const handleNewTaskClicked = () => {
-		setModalOpenedStatus(true);
-	};
-
 	const handleStatusChange = (id: string, newStatus: Task["status"]) => {
 		setItems((prev) =>
 			prev.map((item) =>
@@ -53,48 +41,33 @@ export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
 	};
 
 	return (
-		<SidebarProvider className="justify-center">
-			<Sidebar>
-				<SidebarContent>
-					<SidebarGroup>
-						<SidebarGroupContent>
-							<SidebarMenu>
-								<SidebarMenuItem>
-									<SidebarMenuButton onClick={handleNewTaskClicked} asChild>
-										<div className="cursor-pointer">
-											<Plus />
-											<span>新規作成</span>
-										</div>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							</SidebarMenu>
-						</SidebarGroupContent>
-					</SidebarGroup>
-				</SidebarContent>
-			</Sidebar>
+		<SidebarProvider>
+			<AppSidebar setModalOpenedStatus={setModalOpenedStatus} />
 			<SidebarTrigger>
 				<SidebarIcon />
 			</SidebarTrigger>
-			<EditTask
-				task={new Task({ name: "無題のタスク", status: "TODO" })}
-				isOpened={isModalOpened}
-				onOpenChange={toggleModalStatus}
-				mode="CREATE"
-			/>
-			<TodoList
-				data={[...items].sort((a, b) => {
-					if (a.dueDate && b.dueDate) {
-						return a.dueDate.getTime() - b.dueDate.getTime();
-					} else if (a.dueDate && !b.dueDate) {
-						return -1;
-					} else if (!a.dueDate && b.dueDate) {
-						return 1;
-					} else {
-						return 0;
-					}
-				})}
-				onStatusChange={handleStatusChange}
-			/>
+			<Container>
+				<EditTask
+					task={new Task({ name: "無題のタスク", status: "TODO" })}
+					isOpened={isModalOpened}
+					onOpenChange={toggleModalStatus}
+					mode="CREATE"
+				/>
+				<TodoList
+					data={[...items].sort((a, b) => {
+						if (a.dueDate && b.dueDate) {
+							return a.dueDate.getTime() - b.dueDate.getTime();
+						} else if (a.dueDate && !b.dueDate) {
+							return -1;
+						} else if (!a.dueDate && b.dueDate) {
+							return 1;
+						} else {
+							return 0;
+						}
+					})}
+					onStatusChange={handleStatusChange}
+				/>
+			</Container>
 		</SidebarProvider>
 	);
 }

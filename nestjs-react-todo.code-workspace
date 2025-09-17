@@ -7,5 +7,11 @@
 			"path": "backend"
 		}
 	],
-	"settings": { "prettier.enable": true, "biome.enabled": true }
+	"settings": {
+		"prettier.enable": true,
+		"biome.enabled": true,
+		"files.associations": {
+			"*.css": "tailwindcss"
+		}
+	}
 }
