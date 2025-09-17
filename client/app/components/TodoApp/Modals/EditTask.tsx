@@ -237,12 +237,18 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 
 						<Flex gap="3" mt="4" justify="end">
 							<Dialog.Close>
-								<Button variant={"secondary"} color="gray">
+								<Button
+									variant={"secondary"}
+									color="gray"
+									className="cursor-pointer"
+								>
 									キャンセル
 								</Button>
 							</Dialog.Close>
 							<Dialog.Close>
-								<Button type="submit">保存</Button>
+								<Button type="submit" className="cursor-pointer">
+									保存
+								</Button>
 							</Dialog.Close>
 						</Flex>
 					</fetcher.Form>

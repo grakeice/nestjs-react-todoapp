@@ -41,6 +41,7 @@ export function TodoListItem({ ...props }: TodoListItemProps): JSX.Element {
 						<Button
 							size={"icon"}
 							variant={"ghost"}
+							aria-label="削除ボタン"
 							className={clsx(
 								popoverOpen && "text-red-500",
 								"hover:text-red-500",
@@ -91,8 +92,8 @@ export function TodoListItem({ ...props }: TodoListItemProps): JSX.Element {
 			</TableCell>
 			<TableCell>
 				<fetcher.Form method="post">
-					{/* <input type="hidden" name="_action" value={"update"} /> */}
 					<Checkbox
+						aria-label="タスクのチェックボックス"
 						checked={
 							item.status === "DONE"
 								? true
