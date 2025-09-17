@@ -3,8 +3,9 @@ import type { ItemStatus } from "./types";
 interface ITodoData {
 	id: string;
 	name: string;
-	description?: string;
+	description?: string | null;
 	status: ItemStatus;
+	dueDate?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -12,8 +13,9 @@ interface ITodoData {
 interface TodoDataConstructorArguments {
 	id: string;
 	name: string;
-	description?: string;
+	description?: string | null;
 	status: ItemStatus;
+	dueDate?: Date | null;
 	createdAt?: Date;
 	updatedAt?: Date;
 }
@@ -21,8 +23,9 @@ interface TodoDataConstructorArguments {
 export class TodoData implements ITodoData {
 	id: string;
 	name: string;
-	description?: string;
+	description?: string | null;
 	status: ItemStatus;
+	dueDate?: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 	constructor({
@@ -30,6 +33,7 @@ export class TodoData implements ITodoData {
 		name,
 		description,
 		status,
+		dueDate,
 		createdAt,
 		updatedAt,
 	}: TodoDataConstructorArguments) {
@@ -37,6 +41,7 @@ export class TodoData implements ITodoData {
 		this.name = name;
 		this.description = description;
 		this.status = status;
+		this.dueDate = dueDate;
 		this.createdAt = createdAt ?? new Date();
 		this.updatedAt = updatedAt ?? new Date();
 	}

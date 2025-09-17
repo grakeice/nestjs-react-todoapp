@@ -14,6 +14,7 @@ export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
 	const defaultItems = props.data.map((item) => {
 		return new TodoData({
 			...item,
+			dueDate: item.dueDate ? new Date(item.dueDate) : null,
 			createdAt: new Date(item.createdAt),
 			updatedAt: new Date(item.updatedAt),
 		});

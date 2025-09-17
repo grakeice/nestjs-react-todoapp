@@ -9,6 +9,7 @@ interface TodoListProps {
 }
 
 export function TodoList({ data }: TodoListProps): JSX.Element {
+	console.log(data);
 	return (
 		<Table.Root>
 			<Table.Header>
@@ -16,6 +17,7 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 					<Table.ColumnHeaderCell></Table.ColumnHeaderCell>
 					<Table.ColumnHeaderCell>タイトル</Table.ColumnHeaderCell>
 					<Table.ColumnHeaderCell>説明</Table.ColumnHeaderCell>
+					<Table.ColumnHeaderCell>期限</Table.ColumnHeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
@@ -35,6 +37,7 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 							</Table.Cell>
 							<Table.RowHeaderCell>{item.name}</Table.RowHeaderCell>
 							<Table.Cell>{item.description}</Table.Cell>
+							<Table.Cell>{item.dueDate?.toDateString()}</Table.Cell>
 						</Table.Row>
 					);
 				})}
