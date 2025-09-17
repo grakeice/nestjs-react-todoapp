@@ -1,18 +1,28 @@
 import { type JSX, useState } from "react";
+import type { FetcherWithComponents } from "react-router";
 
-import { Table } from "@radix-ui/themes";
-
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
-import type { Task } from "./core/Task";
-import { EditTask } from "./Modals/EditTask";
+import {
+	Table,
+	TableBody,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "../ui/table";
+import { Task } from "./core/Task";
+import type { TaskDataResponse } from "./core/types";
+import { TodoListItem } from "./TodoListItem";
 
 interface TodoListProps {
 	data: Task[];
+	fetcher: FetcherWithComponents<TaskDataResponse>;
 	onStatusChange?: (id: string, newStatus: Task["status"]) => void;
 }
 
-export function TodoList({ data, onStatusChange }: TodoListProps): JSX.Element {
+export function TodoList({
+	data,
+	onStatusChange,
+	fetcher,
+}: TodoListProps): JSX.Element {
 	const [_isModalOpened, setModalOpenedStatus] = useState(false);
 	const [editingTaskId, setEditingTaskId] = useState("");
 	const toggleModalOpenedStatus = () => {
@@ -29,8 +39,7 @@ export function TodoList({ data, onStatusChange }: TodoListProps): JSX.Element {
 		setEditingTaskId(id);
 		setModalOpenedStatus(true);
 	};
-
-	const handleCheckboxChanged = (
+	const handleCheckboxChanged = async (
 		id: string,
 		checked: boolean | "indeterminate",
 	) => {
@@ -42,72 +51,51 @@ export function TodoList({ data, onStatusChange }: TodoListProps): JSX.Element {
 		} else {
 			newStatus = "TODO";
 		}
-		console.log(newStatus);
-		fetch(`http://127.0.0.1:3000/items/${id}`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				status: newStatus,
-			}),
-		});
+		await fetcher.submit(
+			{ _action: "update", status: newStatus, id },
+			{ method: "post" },
+		);
 		if (!onStatusChange) return;
 		onStatusChange(id, newStatus);
 	};
 
 	return (
-		<Table.Root className="min-w-2/3">
-			<Table.Header>
-				<Table.Row>
-					<Table.ColumnHeaderCell />
-					<Table.ColumnHeaderCell>タイトル</Table.ColumnHeaderCell>
-					<Table.ColumnHeaderCell>説明</Table.ColumnHeaderCell>
-					<Table.ColumnHeaderCell>期限</Table.ColumnHeaderCell>
-					<Table.ColumnHeaderCell />
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{data.map((item) => {
+		<Table className="min-w-2/3">
+			<TableHeader>
+				<TableRow>
+					<TableHead />
+					<TableHead />
+					<TableHead>タイトル</TableHead>
+					<TableHead>説明</TableHead>
+					<TableHead>期限</TableHead>
+					<TableHead />
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{(
+					fetcher.data?.map(
+						(item) =>
+							new Task({
+								...item,
+								dueDate: item.dueDate ? new Date(item.dueDate) : null,
+								createdAt: new Date(item.createdAt),
+								updatedAt: new Date(item.updatedAt),
+							}),
+					) ?? data
+				).map((item) => {
 					return (
-						<Table.Row key={item.id}>
-							<Table.Cell>
-								<Checkbox
-									checked={
-										item.status === "DONE"
-											? true
-											: item.status === "IN_PROGRESS"
-												? "indeterminate"
-												: false
-									}
-									onCheckedChange={(checked) =>
-										handleCheckboxChanged(item.id, checked)
-									}
-								/>
-							</Table.Cell>
-							<Table.RowHeaderCell>{item.name}</Table.RowHeaderCell>
-							<Table.Cell>{item.description}</Table.Cell>
-							<Table.Cell>
-								{item.dueDate?.toLocaleDateString("ja", {
-									dateStyle: "long",
-								})}
-							</Table.Cell>
-							<Table.Cell>
-								<Button
-									type="button"
-									onClick={() => handleEditButtonClick(item.id)}
-								>
-									編集
-								</Button>
-								<EditTask
-									isOpened={isModalOpened(item.id)}
-									onOpenChange={toggleModalOpenedStatus}
-									task={item}
-									mode="EDIT"
-								/>
-							</Table.Cell>
-						</Table.Row>
+						<TodoListItem
+							key={item.id}
+							item={item}
+							toggleModalOpenedStatus={toggleModalOpenedStatus}
+							isModalOpened={isModalOpened}
+							handleEditButtonClick={handleEditButtonClick}
+							handleCheckboxChanged={handleCheckboxChanged}
+							fetcher={fetcher}
+						/>
 					);
 				})}
-			</Table.Body>
-		</Table.Root>
+			</TableBody>
+		</Table>
 	);
 }

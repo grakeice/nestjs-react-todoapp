@@ -1,9 +1,9 @@
 import type { JSX } from "react";
 import { useId, useState } from "react";
+import type { FetcherWithComponents } from "react-router";
 
 import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Calendar } from "~/components/ui/calendar";
@@ -34,15 +34,23 @@ import { Textarea } from "~/components/ui/textarea";
 import { Dialog, Flex } from "@radix-ui/themes";
 
 import type { Task } from "../core/Task";
-import { itemStatusSchema, type UpdateItem } from "../core/types";
+import {
+	actionStatusSchema,
+	itemStatusSchema,
+	type TaskDataResponse,
+	type UpdateItem,
+} from "../core/types";
 
 interface EditTaskProps {
 	task: Task;
 	isOpened: boolean;
 	onOpenChange: () => void;
 	mode: "EDIT" | "CREATE";
+	fetcher: FetcherWithComponents<TaskDataResponse>;
 }
 const formSchema = z.object<UpdateItem>({
+	_action: actionStatusSchema,
+	id: z.uuid(),
 	name: z.string().nonempty(),
 	description: z.string().optional(),
 	dueDate: z.date().optional(),
@@ -57,10 +65,13 @@ function isValidDate(date: Date | undefined) {
 }
 
 export function EditTask({ ...props }: EditTaskProps): JSX.Element {
+	const fetcher = props.fetcher;
 	const task = props.task;
 	const descriptionId = useId();
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: {
+			_action: props.mode === "CREATE" ? "create" : "edit",
+			id: task.id,
 			name: task.name,
 			description: task.description ?? undefined,
 			dueDate: task.dueDate ?? undefined,
@@ -72,51 +83,10 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 	const [month, setMonth] = useState<Date | undefined>(date);
 	const [value, setValue] = useState(date?.toLocaleDateString("ja"));
 	const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-		switch (props.mode) {
-			case "CREATE": {
-				console.log(data);
-				const response = await fetch(`http://127.0.0.1:3000/items`, {
-					body: JSON.stringify({
-						name: data.name,
-						dueDate: data.dueDate,
-						status: data.status,
-						description: data.description,
-					}),
-					headers: { "Content-Type": "application/json" },
-					method: "POST",
-				});
-				console.log(JSON.stringify(data));
-				toast("Task updated", {
-					description: (
-						<pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-							<code className="text-white">
-								{JSON.stringify(await response.json(), null, 2)}
-							</code>
-						</pre>
-					),
-				});
-				break;
-			}
-			case "EDIT": {
-				const response = await fetch(`http://127.0.0.1:3000/items/${task.id}`, {
-					body: JSON.stringify({ ...data }),
-					headers: { "Content-Type": "application/json" },
-					method: "PUT",
-				});
-				console.log(JSON.stringify(data));
-				toast("Task updated", {
-					description: (
-						<pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-							<code className="text-white">
-								{JSON.stringify(await response.json(), null, 2)}
-							</code>
-						</pre>
-					),
-				});
-				break;
-			}
-		}
-		location.reload();
+		await fetcher.submit(JSON.parse(JSON.stringify(data)), {
+			method: "post",
+		});
+		if (props.mode === "CREATE") form.reset();
 	};
 
 	return (
@@ -124,7 +94,18 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 			<Toaster />
 			<Dialog.Content>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleSubmit)}>
+					<fetcher.Form onSubmit={form.handleSubmit(handleSubmit)}>
+						<FormField
+							control={form.control}
+							name="_action"
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<input type="hidden" defaultValue={field.value} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
 						<FormField
 							control={form.control}
 							name="name"
@@ -142,7 +123,7 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 									</Dialog.Title>
 								</FormItem>
 							)}
-						></FormField>
+						/>
 						<Dialog.Description hidden>タスクの編集</Dialog.Description>
 						<Flex direction="column" gap="3">
 							<FormField
@@ -264,7 +245,7 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 								<Button type="submit">保存</Button>
 							</Dialog.Close>
 						</Flex>
-					</form>
+					</fetcher.Form>
 				</Form>
 			</Dialog.Content>
 		</Dialog.Root>

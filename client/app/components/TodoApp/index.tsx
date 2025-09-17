@@ -1,4 +1,5 @@
 import { type JSX, useState } from "react";
+import { useFetcher } from "react-router";
 
 import { SidebarIcon } from "lucide-react";
 import { Container } from "@radix-ui/themes";
@@ -14,17 +15,19 @@ interface TodoAppProps {
 	data: TaskDataResponse;
 }
 
-export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
-	const [items, setItems] = useState<Task[]>(() =>
-		props.data.map(
-			(item) =>
-				new Task({
-					...item,
-					dueDate: item.dueDate ? new Date(item.dueDate) : null,
-					createdAt: new Date(item.createdAt),
-					updatedAt: new Date(item.updatedAt),
-				}),
-		),
+export function TodoApp({ data }: TodoAppProps): JSX.Element {
+	const fetcher = useFetcher<TaskDataResponse>();
+	const [items, setItems] = useState<Task[]>(
+		(() =>
+			data.map(
+				(item) =>
+					new Task({
+						...item,
+						dueDate: item.dueDate ? new Date(item.dueDate) : null,
+						createdAt: new Date(item.createdAt),
+						updatedAt: new Date(item.updatedAt),
+					}),
+			) ?? [])(),
 	);
 	const [isModalOpened, setModalOpenedStatus] = useState(false);
 
@@ -52,6 +55,7 @@ export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
 					isOpened={isModalOpened}
 					onOpenChange={toggleModalStatus}
 					mode="CREATE"
+					fetcher={fetcher}
 				/>
 				<TodoList
 					data={[...items].sort((a, b) => {
@@ -66,6 +70,7 @@ export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
 						}
 					})}
 					onStatusChange={handleStatusChange}
+					fetcher={fetcher}
 				/>
 			</Container>
 		</SidebarProvider>
