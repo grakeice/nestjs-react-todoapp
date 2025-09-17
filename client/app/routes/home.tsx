@@ -1,7 +1,7 @@
 import { useLoaderData } from "react-router";
 
 import { TodoApp } from "~/components/TodoApp";
-import type { TodoDataResponse } from "~/components/TodoApp/core/types";
+import type { TaskDataResponse } from "~/components/TodoApp/core/types";
 import { Container } from "@radix-ui/themes";
 
 import type { Route } from "./+types/home";
@@ -15,7 +15,7 @@ export function meta({}: Route.MetaArgs) {
 }
 export async function clientLoader() {
 	const res = await fetch("http://127.0.0.1:3000/items", { mode: "cors" });
-	const data = (await res.json()) as TodoDataResponse;
+	const data = (await res.json()) as TaskDataResponse;
 	return data;
 }
 

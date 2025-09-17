@@ -1,7 +1,9 @@
 import { type JSX, useState } from "react";
 
-import { Button, Checkbox, Table } from "@radix-ui/themes";
+import { Table } from "@radix-ui/themes";
 
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import type { Task } from "./core/Task";
 import { EditTask } from "./Modals/EditTask";
 
@@ -29,7 +31,7 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 
 	console.log(data);
 	return (
-		<Table.Root>
+		<Table.Root className="min-w-2/3">
 			<Table.Header>
 				<Table.Row>
 					<Table.ColumnHeaderCell />
@@ -68,6 +70,7 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 									isOpened={isModalOpened(item.id)}
 									onOpenChange={toggleModalOpenedStatus}
 									task={item}
+									mode="EDIT"
 								/>
 							</Table.Cell>
 						</Table.Row>

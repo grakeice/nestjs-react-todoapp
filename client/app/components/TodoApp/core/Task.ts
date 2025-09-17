@@ -11,7 +11,7 @@ interface ITask {
 }
 
 interface TaskConstructorArguments {
-	id: string;
+	id?: string;
 	name: string;
 	description?: string | null;
 	status: ItemStatus;
@@ -37,7 +37,7 @@ export class Task implements ITask {
 		createdAt,
 		updatedAt,
 	}: TaskConstructorArguments) {
-		this.id = id;
+		this.id = id ?? crypto.randomUUID();
 		this.name = name;
 		this.description = description;
 		this.status = status;
