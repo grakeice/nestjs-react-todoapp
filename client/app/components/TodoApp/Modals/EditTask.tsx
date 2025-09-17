@@ -74,6 +74,7 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 	const handleSubmit = async (data: z.infer<typeof formSchema>) => {
 		switch (props.mode) {
 			case "CREATE": {
+				console.log(data);
 				const response = await fetch(`http://127.0.0.1:3000/items`, {
 					body: JSON.stringify({
 						name: data.name,
@@ -134,6 +135,7 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 											<input
 												defaultValue={field.value}
 												type="text"
+												onChange={field.onChange}
 												contentEditable
 											/>
 										</FormControl>
