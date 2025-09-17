@@ -1,6 +1,6 @@
 import type { ItemStatus } from "./types";
 
-interface ITodoData {
+interface ITask {
 	id: string;
 	name: string;
 	description?: string | null;
@@ -10,7 +10,7 @@ interface ITodoData {
 	updatedAt: Date;
 }
 
-interface TodoDataConstructorArguments {
+interface TaskConstructorArguments {
 	id: string;
 	name: string;
 	description?: string | null;
@@ -20,7 +20,7 @@ interface TodoDataConstructorArguments {
 	updatedAt?: Date;
 }
 
-export class TodoData implements ITodoData {
+export class Task implements ITask {
 	id: string;
 	name: string;
 	description?: string | null;
@@ -36,7 +36,7 @@ export class TodoData implements ITodoData {
 		dueDate,
 		createdAt,
 		updatedAt,
-	}: TodoDataConstructorArguments) {
+	}: TaskConstructorArguments) {
 		this.id = id;
 		this.name = name;
 		this.description = description;

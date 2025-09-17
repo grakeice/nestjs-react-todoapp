@@ -1,23 +1,42 @@
-import type { JSX } from "react";
+import { type JSX, useState } from "react";
 
-import { Checkbox, Table } from "@radix-ui/themes";
+import { Button, Checkbox, Table } from "@radix-ui/themes";
 
-import type { TodoData } from "./core/TodoData";
+import type { Task } from "./core/Task";
+import { EditTask } from "./Modals/EditTask";
 
 interface TodoListProps {
-	data: TodoData[];
+	data: Task[];
 }
 
 export function TodoList({ data }: TodoListProps): JSX.Element {
+	const [_isModalOpened, setModalOpenedStatus] = useState(false);
+	const [editingTaskId, setEditingTaskId] = useState("");
+	const toggleModalOpenedStatus = () => {
+		if (_isModalOpened) setModalOpenedStatus(false);
+		else setModalOpenedStatus(true);
+	};
+
+	const isModalOpened = (id: string) => {
+		if (_isModalOpened && id === editingTaskId) return true;
+		else return false;
+	};
+
+	const handleEditButtonClick = (id: string) => {
+		setEditingTaskId(id);
+		setModalOpenedStatus(true);
+	};
+
 	console.log(data);
 	return (
 		<Table.Root>
 			<Table.Header>
 				<Table.Row>
-					<Table.ColumnHeaderCell></Table.ColumnHeaderCell>
+					<Table.ColumnHeaderCell />
 					<Table.ColumnHeaderCell>タイトル</Table.ColumnHeaderCell>
 					<Table.ColumnHeaderCell>説明</Table.ColumnHeaderCell>
 					<Table.ColumnHeaderCell>期限</Table.ColumnHeaderCell>
+					<Table.ColumnHeaderCell />
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
@@ -38,6 +57,19 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 							<Table.RowHeaderCell>{item.name}</Table.RowHeaderCell>
 							<Table.Cell>{item.description}</Table.Cell>
 							<Table.Cell>{item.dueDate?.toDateString()}</Table.Cell>
+							<Table.Cell>
+								<Button
+									type="button"
+									onClick={() => handleEditButtonClick(item.id)}
+								>
+									編集
+								</Button>
+								<EditTask
+									isOpened={isModalOpened(item.id)}
+									onOpenChange={toggleModalOpenedStatus}
+									task={item}
+								/>
+							</Table.Cell>
 						</Table.Row>
 					);
 				})}

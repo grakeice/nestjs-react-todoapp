@@ -1,5 +1,5 @@
 export type ItemStatus = "TODO" | "IN_PROGRESS" | "DONE";
-export type TodoDataResponse = {
+export type TaskDataResponse = {
 	id: string;
 	name: string;
 	description: string | null;

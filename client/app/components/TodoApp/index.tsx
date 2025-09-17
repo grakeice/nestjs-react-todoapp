@@ -1,18 +1,18 @@
 import { type JSX, useRef } from "react";
 
-import { TodoData } from "./core/TodoData";
-import type { TodoDataResponse } from "./core/types";
+import { Task } from "./core/Task";
+import type { TaskDataResponse } from "./core/types";
 import { TodoList } from "./TodoList";
 
 interface TodoAppProps {
-	data: TodoDataResponse;
+	data: TaskDataResponse;
 }
 
 export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
-	const items = useRef<TodoData[]>([]);
+	const items = useRef<Task[]>([]);
 
 	const defaultItems = props.data.map((item) => {
-		return new TodoData({
+		return new Task({
 			...item,
 			dueDate: item.dueDate ? new Date(item.dueDate) : null,
 			createdAt: new Date(item.createdAt),
