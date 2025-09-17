@@ -15,13 +15,13 @@ export class ItemsService {
 	}
 
 	async create(createItemDto: CreateItemDto) {
-		const { name, description, dueDate } = createItemDto;
+		const { name, description, dueDate, status } = createItemDto;
 		return await this.prismaService.item.create({
 			data: {
 				name,
 				description,
 				dueDate,
-				status: "TODO",
+				status: status ?? "TODO",
 			},
 		});
 	}

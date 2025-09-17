@@ -81,7 +81,20 @@ export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
 				onOpenChange={toggleModalStatus}
 				mode="CREATE"
 			/>
-			<TodoList data={items} onStatusChange={handleStatusChange} />
+			<TodoList
+				data={[...items].sort((a, b) => {
+					if (a.dueDate && b.dueDate) {
+						return a.dueDate.getTime() - b.dueDate.getTime();
+					} else if (a.dueDate && !b.dueDate) {
+						return -1;
+					} else if (!a.dueDate && b.dueDate) {
+						return 1;
+					} else {
+						return 0;
+					}
+				})}
+				onStatusChange={handleStatusChange}
+			/>
 		</SidebarProvider>
 	);
 }

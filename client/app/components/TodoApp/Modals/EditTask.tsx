@@ -78,6 +78,7 @@ export function EditTask({ ...props }: EditTaskProps): JSX.Element {
 					body: JSON.stringify({
 						name: data.name,
 						dueDate: data.dueDate,
+						status: data.status,
 						description: data.description,
 					}),
 					headers: { "Content-Type": "application/json" },
