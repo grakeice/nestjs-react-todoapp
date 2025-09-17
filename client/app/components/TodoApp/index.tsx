@@ -1,4 +1,4 @@
-import { type JSX, useRef, useState } from "react";
+import { type JSX, useState } from "react";
 
 import { Plus, SidebarIcon } from "lucide-react";
 
@@ -23,27 +23,34 @@ interface TodoAppProps {
 }
 
 export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
-	const items = useRef<Task[]>([]);
+	const [items, setItems] = useState<Task[]>(() =>
+		props.data.map(
+			(item) =>
+				new Task({
+					...item,
+					dueDate: item.dueDate ? new Date(item.dueDate) : null,
+					createdAt: new Date(item.createdAt),
+					updatedAt: new Date(item.updatedAt),
+				}),
+		),
+	);
 	const [isModalOpened, setModalOpenedStatus] = useState(false);
 
 	const toggleModalStatus = () => {
-		if (isModalOpened) setModalOpenedStatus(false);
-		else setModalOpenedStatus(true);
+		setModalOpenedStatus((prev) => !prev);
 	};
 
 	const handleNewTaskClicked = () => {
 		setModalOpenedStatus(true);
 	};
 
-	const defaultItems = props.data.map((item) => {
-		return new Task({
-			...item,
-			dueDate: item.dueDate ? new Date(item.dueDate) : null,
-			createdAt: new Date(item.createdAt),
-			updatedAt: new Date(item.updatedAt),
-		});
-	});
-	items.current = defaultItems;
+	const handleStatusChange = (id: string, newStatus: Task["status"]) => {
+		setItems((prev) =>
+			prev.map((item) =>
+				item.id === id ? new Task({ ...item, status: newStatus }) : item,
+			),
+		);
+	};
 
 	return (
 		<SidebarProvider className="justify-center">
@@ -74,7 +81,7 @@ export function TodoApp({ ...props }: TodoAppProps): JSX.Element {
 				onOpenChange={toggleModalStatus}
 				mode="CREATE"
 			/>
-			<TodoList data={items.current} />
+			<TodoList data={items} onStatusChange={handleStatusChange} />
 		</SidebarProvider>
 	);
 }

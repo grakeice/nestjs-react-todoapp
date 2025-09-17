@@ -9,9 +9,10 @@ import { EditTask } from "./Modals/EditTask";
 
 interface TodoListProps {
 	data: Task[];
+	onStatusChange?: (id: string, newStatus: Task["status"]) => void;
 }
 
-export function TodoList({ data }: TodoListProps): JSX.Element {
+export function TodoList({ data, onStatusChange }: TodoListProps): JSX.Element {
 	const [_isModalOpened, setModalOpenedStatus] = useState(false);
 	const [editingTaskId, setEditingTaskId] = useState("");
 	const toggleModalOpenedStatus = () => {
@@ -27,6 +28,30 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 	const handleEditButtonClick = (id: string) => {
 		setEditingTaskId(id);
 		setModalOpenedStatus(true);
+	};
+
+	const handleCheckboxChanged = (
+		id: string,
+		checked: boolean | "indeterminate",
+	) => {
+		let newStatus: Task["status"];
+		if (checked === true) {
+			newStatus = "DONE";
+		} else if (checked === "indeterminate") {
+			newStatus = "IN_PROGRESS";
+		} else {
+			newStatus = "TODO";
+		}
+		console.log(newStatus);
+		fetch(`http://127.0.0.1:3000/items/${id}`, {
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				status: newStatus,
+			}),
+		});
+		if (!onStatusChange) return;
+		onStatusChange(id, newStatus);
 	};
 
 	return (
@@ -46,19 +71,24 @@ export function TodoList({ data }: TodoListProps): JSX.Element {
 						<Table.Row key={item.id}>
 							<Table.Cell>
 								<Checkbox
-									defaultChecked={
+									checked={
 										item.status === "DONE"
 											? true
 											: item.status === "IN_PROGRESS"
 												? "indeterminate"
 												: false
 									}
+									onCheckedChange={(checked) =>
+										handleCheckboxChanged(item.id, checked)
+									}
 								/>
 							</Table.Cell>
 							<Table.RowHeaderCell>{item.name}</Table.RowHeaderCell>
 							<Table.Cell>{item.description}</Table.Cell>
 							<Table.Cell>
-								{item.dueDate?.toLocaleDateString("ja", { dateStyle: "long" })}
+								{item.dueDate?.toLocaleDateString("ja", {
+									dateStyle: "long",
+								})}
 							</Table.Cell>
 							<Table.Cell>
 								<Button
