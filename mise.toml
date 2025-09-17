@@ -6,3 +6,4 @@ pnpm = "latest"
 client = { run = "pnpm run client" }
 backend = { run = "pnpm run backend" }
 dev = { run = "pnpm client dev & pnpm backend start:dev" }
+"prisma:dev" = { run = "pnpm backend run prisma dev" }
