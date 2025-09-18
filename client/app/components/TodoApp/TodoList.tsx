@@ -72,7 +72,7 @@ export function TodoList({
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{(
+				{Task.sort(
 					fetcher.data?.map(
 						(item) =>
 							new Task({
@@ -81,7 +81,7 @@ export function TodoList({
 								createdAt: new Date(item.createdAt),
 								updatedAt: new Date(item.updatedAt),
 							}),
-					) ?? data
+					) ?? data,
 				).map((item) => {
 					return (
 						<TodoListItem

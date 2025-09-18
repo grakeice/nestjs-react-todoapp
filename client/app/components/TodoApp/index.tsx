@@ -57,17 +57,7 @@ export function TodoApp({ data }: TodoAppProps): JSX.Element {
 					fetcher={fetcher}
 				/>
 				<TodoList
-					data={[...items].sort((a, b) => {
-						if (a.dueDate && b.dueDate) {
-							return a.dueDate.getTime() - b.dueDate.getTime();
-						} else if (a.dueDate && !b.dueDate) {
-							return -1;
-						} else if (!a.dueDate && b.dueDate) {
-							return 1;
-						} else {
-							return 0;
-						}
-					})}
+					data={Task.sort(items)}
 					onStatusChange={handleStatusChange}
 					fetcher={fetcher}
 				/>
