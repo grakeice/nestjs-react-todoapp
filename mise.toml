@@ -1,6 +1,6 @@
 [tools]
 node = "24"
-pnpm = "latest"
+"npm:pnpm" = "latest"
 
 [tasks]
 client = { run = "pnpm run client" }
